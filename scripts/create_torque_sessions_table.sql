@@ -1,21 +1,6 @@
 USE `torque`;
 
-SELECT Count(*)
-INTO @exists
-FROM information_schema.tables 
-WHERE table_schema = 'torque'
-    AND table_type = 'BASE TABLE'
-    AND table_name = 'sessions';
-
-SET @query = If(@exists>0,
-    'RENAME TABLE sessions TO sessions_old',
-    'SELECT \'nothing to rename\' status');
-
-PREPARE stmt FROM @query;
-
-EXECUTE stmt;
-#DROP TABLE IF EXISTS `sessions`;
-CREATE TABLE `sessions` (
+CREATE TABLE IF NOT EXISTS `sessions` (
   `v` varchar(1) NOT NULL,
   `id` varchar(32) NOT NULL,
   `session` varchar(15) NOT NULL,
